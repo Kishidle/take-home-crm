@@ -1,9 +1,87 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
 export default function Home() {
+  const [filename, setFilename] = useState("");
+  const [file, setFile] = useState<File>();
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
+      return;
+    }
+    const file = event.target.files[0];
+    if (file) {
+      setFilename(file.name);
+      setFile(file);
+    } else {
+      setFilename("");
+      setFile(undefined);
+    }
+  };
+
+  const handleOnSubmit = async () => {
+    // if (!file) {
+    //   return;
+    // }
+    // try {
+    //   const response = await fetch("http://localhost:8000/upload", {
+    //     method: "POST",
+    //     body: file,
+    //     headers: {
+    //       "Access-Control-Allow-Origin": "*",
+    //     },
+    //   });
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    if (!file) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20">
+      {/* Upload csv file */}
+      <p className="text-white text-xl">Upload a csv file</p>
+      <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-3 w-[20vw]">
+        <label
+          htmlFor="file"
+          className="cursor-pointer bg-blue-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+        >
+          Select CSV File
+        </label>
+        <input
+          type="file"
+          id="file"
+          accept=".csv"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <p className="text-gray-500 text-sm overflow-ellipsis">
+          {filename || "Only .csv files are supported"}
+        </p>
+        <button
+          className="bg-green-600 px-6 py-2 rounded-md font-semibold text-white hover:bg-green-700 transition"
+          onClick={handleOnSubmit}
+        >
+          Upload
+        </button>
+      </div>
+
+      {/* <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
           src="/next.svg"
@@ -50,8 +128,8 @@ export default function Home() {
             Read our docs
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+      </main> */}
+      {/* <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -97,7 +175,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }
