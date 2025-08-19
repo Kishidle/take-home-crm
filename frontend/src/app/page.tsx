@@ -1,9 +1,17 @@
 "use client";
 import { useState } from "react";
 
+interface Results {
+  message: string;
+  totalContacts: number;
+  totalErrors: number;
+  duplicatesSkipped: number;
+  runtime: number;
+}
 export default function Home() {
   const [filename, setFilename] = useState("");
   const [file, setFile] = useState<File>();
+  const [results, setResults] = useState<Results>();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       return;
@@ -48,15 +56,16 @@ export default function Home() {
       });
       const data = await response.json();
       console.log(data);
+      setResults(data);
     } catch (error) {
       console.error(error);
     }
   };
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20">
+    <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-40 sm:p-20">
       {/* Upload csv file */}
-      <p className="text-white text-xl">Upload a csv file</p>
-      <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-3 w-[20vw]">
+
+      <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-3 w-[30vw] h-[40vh]">
         <label
           htmlFor="file"
           className="cursor-pointer bg-blue-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-blue-700 transition"
@@ -74,11 +83,31 @@ export default function Home() {
           {filename || "Only .csv files are supported"}
         </p>
         <button
-          className="bg-green-600 px-6 py-2 rounded-md font-semibold text-white hover:bg-green-700 transition"
+          className="bg-green-600 px-6 py-2 rounded-md font-semibold text-white hover:bg-green-700 transition mb-4"
           onClick={handleOnSubmit}
         >
           Upload
         </button>
+        <div className="w-full h-[1px] bg-gray-300" />
+        <h1 className="text-3xl font-bold text-black">Summary</h1>
+        {results && (
+          <div className="flex flex-col gap-2 w-full">
+            <ul>
+              <li className="mb-2 tracking-[-.01em] text-xl text-black">
+                <p>Total Contacts Imported: {results.totalContacts}</p>
+              </li>
+              <li className="mb-2 tracking-[-.01em] text-xl text-black">
+                <p>Total Errors: {results.totalErrors}</p>
+              </li>
+              <li className="mb-2 tracking-[-.01em] text-xl text-black">
+                <p>Duplicates Skipped: {results.duplicatesSkipped}</p>
+              </li>
+              <li className="mb-2 tracking-[-.01em] text-xl text-black">
+                <p>Runtime: {results.runtime.toFixed(2)} seconds</p>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
