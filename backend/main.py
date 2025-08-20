@@ -230,14 +230,14 @@ async def generate():
     with open(file_name, "w", newline=""):
         writer = csv.writer(open(file_name, "w", newline=""))
         writer.writerow(
-            ["name", "email", "company", "phone", "lead_type", "lead_label"]
+            ["name", "email", "company", "phone"]
         )
         for _ in range(100):
             name = f.name()
             email = f.email()
             company = f.company()
             phone = generate_random_phone_number()
-            lead_type = r.choice(["NEW_BUSINESS", "UPSELL", "RE_ATTEMPTING"])
-            lead_label = r.choice(["HOT", "WARM", "COLD"])
-            writer.writerow([name, email, company, phone, lead_type, lead_label])
+            # lead_type = r.choice(["NEW_BUSINESS", "UPSELL", "RE_ATTEMPTING"])
+            # lead_label = r.choice(["HOT", "WARM", "COLD"])
+            writer.writerow([name, email, company, phone])
     return {"message": "Successfully generated file"}
