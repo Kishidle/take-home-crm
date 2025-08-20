@@ -80,12 +80,12 @@ async def upload(file: UploadFile = File(...)):
             print("Missing required field: name")
             error_count += 1
             continue
-        if not new_contact["lead_type"]:
-            # add default lead_type
-            new_contact["lead_type"] = "NEW_BUSINESS"
-        if not new_contact["lead_label"]:
-            # add default lead_label
-            new_contact["lead_label"] = "HOT"
+        # if not new_contact["lead_type"]:
+        #     # add default lead_type
+        #     new_contact["lead_type"] = "NEW_BUSINESS"
+        # if not new_contact["lead_label"]:
+        #     # add default lead_label
+        #     new_contact["lead_label"] = "HOT"
 
         # check if email already exists as a contact in Hubspot
         try:
@@ -188,8 +188,8 @@ async def upload(file: UploadFile = File(...)):
                         "hs_lead_name": contact_info["firstname"]
                         + " "
                         + contact_info["lastname"],
-                        "hs_lead_type": contact_info["lead_type"],
-                        "hs_lead_label": contact_info["lead_label"],
+                        # "hs_lead_type": contact_info["lead_type"],
+                        # "hs_lead_label": contact_info["lead_label"],
                     },
                 }
             )
